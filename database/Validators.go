@@ -121,7 +121,7 @@ var orderSchema = bson.M{
 			"description": "must be a string and is required",
 		},
 		"quantity": bson.M{
-			"bsonType":    "string",
+			"bsonType":    "int",
 			"description": "must be a string and is required",
 		},
 		"price": bson.M{

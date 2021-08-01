@@ -1,9 +1,11 @@
 package models
 
 import (
+	"context"
 	"time"
 
 	uuid "github.com/satori/go.uuid"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Address struct {
@@ -38,4 +40,9 @@ type Order struct {
 	Product    Product
 	CreatedAt  time.Time `bson:"createdAt,omitempty"`
 	UpdatedAt  time.Time `bson:"updatedAt,omitempty"`
+}
+
+type Cluster struct {
+	Client *mongo.Client
+	Ctx    context.Context
 }
