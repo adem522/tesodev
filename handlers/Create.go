@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -29,7 +28,6 @@ func CreateProduct(c echo.Context) error {
 		Id: uuid.NewV4(),
 	}
 	err := c.Bind(&data)
-	log.Println(data)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
@@ -37,10 +35,7 @@ func CreateProduct(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-	return c.JSON(http.StatusOK, "inserted Id "+data.Id.String()+".")
+	return c.JSON(http.StatusOK, data.Id.String())
 }
 
 func CreateOrder(c echo.Context) error {
@@ -50,7 +45,6 @@ func CreateOrder(c echo.Context) error {
 		UpdatedAt: time.Now(),
 	}
 	err := c.Bind(&data)
-	log.Println(data)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
@@ -58,10 +52,7 @@ func CreateOrder(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-	return c.JSON(http.StatusOK, "inserted Id "+data.Id.String()+".")
+	return c.JSON(http.StatusOK, data.Id.String())
 }
 
 func CreateCustomer(c echo.Context) error {
@@ -71,7 +62,6 @@ func CreateCustomer(c echo.Context) error {
 		UpdatedAt: time.Now(),
 	}
 	err := c.Bind(&data)
-	log.Println(data)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
@@ -79,8 +69,5 @@ func CreateCustomer(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-	return c.JSON(http.StatusOK, "inserted Id "+data.Id.String()+".")
+	return c.JSON(http.StatusOK, data.Id.String())
 }

@@ -13,5 +13,12 @@ func main() {
 	create.POST("/product", handlers.CreateProduct)
 	create.POST("/order", handlers.CreateOrder)
 	create.POST("/customer", handlers.CreateCustomer)
+
+	update := e.Group("/update")
+	update.POST("/order", handlers.UpdateOrder)
+
+	get := e.Group("/get")
+	get.POST("/order", handlers.GetOrder)
+
 	e.Logger.Fatal(e.Start(":8080"))
 }
