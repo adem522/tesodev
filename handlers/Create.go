@@ -48,7 +48,7 @@ func CreateOrder(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	err = database.CreateOrder(&data, "Order")
+	err = database.Create(&data, "Order")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}

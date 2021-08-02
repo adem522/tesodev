@@ -1,0 +1,17 @@
+package database
+
+import (
+	"testing"
+
+	"github.com/adem522/tesodev/database"
+)
+
+func TestGet(t *testing.T) {
+	data, err := database.Get("", "Customer")
+	if err != nil {
+		t.Errorf("expected nil, received err %v", err)
+	}
+	if data == nil {
+		t.Errorf("expected not nil, received nil %v", data)
+	}
+}

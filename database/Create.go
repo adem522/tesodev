@@ -23,17 +23,6 @@ func Create(v interface{}, collectionName string) error {
 	return nil
 }
 
-func CreateOrder(model *models.Order, collectionName string) error {
-	client, ctx, cancel := Connect()
-	defer Close(client, ctx, cancel)
-	collection := client.Database("tesodev").Collection(collectionName)
-	_, err := collection.InsertOne(ctx, model)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func CreateCollections() error {
 	client, ctx, cancel := Connect()
 	defer Close(client, ctx, cancel)
