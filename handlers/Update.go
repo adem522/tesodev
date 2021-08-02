@@ -19,10 +19,11 @@ func UpdateOrder(c echo.Context) error {
 		fmt.Println("bind hatası")
 		return c.JSON(http.StatusBadRequest, err)
 	}
+	fmt.Println(data.Price)
 	err = database.UpdateOrder(&data, "Order")
 	if err != nil {
 		fmt.Println("update hatası")
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, data.Id.String())
+	return c.JSON(http.StatusOK, data.Id)
 }

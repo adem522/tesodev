@@ -25,7 +25,7 @@ func CreateAddress(c echo.Context) error {
 
 func CreateProduct(c echo.Context) error {
 	data := models.Product{
-		Id: uuid.NewV4(),
+		Id: uuid.NewV4().String(),
 	}
 	err := c.Bind(&data)
 	if err != nil {
@@ -35,12 +35,12 @@ func CreateProduct(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, data.Id.String())
+	return c.JSON(http.StatusOK, data.Id)
 }
 
 func CreateOrder(c echo.Context) error {
 	data := models.Order{
-		Id:        uuid.NewV4(),
+		Id:        uuid.NewV4().String(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -48,16 +48,16 @@ func CreateOrder(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	err = database.Create(&data, "Order")
+	err = database.CreateOrder(&data, "Order")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, data.Id.String())
+	return c.JSON(http.StatusOK, data.Id)
 }
 
 func CreateCustomer(c echo.Context) error {
 	data := models.Customer{
-		Id:        uuid.NewV4(),
+		Id:        uuid.NewV4().String(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -69,5 +69,5 @@ func CreateCustomer(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, data.Id.String())
+	return c.JSON(http.StatusOK, data.Id)
 }

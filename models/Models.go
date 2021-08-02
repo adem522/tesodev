@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 type Address struct {
@@ -14,26 +12,26 @@ type Address struct {
 }
 
 type Customer struct {
-	Id        uuid.UUID `bson:"_id,omitempty"`
-	Name      string    `bson:"name,omitempty"`
-	Email     string    `bson:"email,omitempty"`
+	Id        string `bson:"_id,omitempty" json:"_id"`
+	Name      string `bson:"name,omitempty"`
+	Email     string `bson:"email,omitempty"`
 	Address   Address
 	CreatedAt time.Time `bson:"createdAt,omitempty"`
 	UpdatedAt time.Time `bson:"updatedAt,omitempty"`
 }
 
 type Product struct {
-	Id       uuid.UUID `bson:"_id,omitempty"`
-	ImageUrl string    `bson:"imageUrl,omitempty"`
-	Name     string    `bson:"name,omitempty"`
+	Id       string `bson:"_id,omitempty" json:"_id"`
+	ImageUrl string `bson:"imageUrl,omitempty"`
+	Name     string `bson:"name,omitempty"`
 }
 
 type Order struct {
-	Id         uuid.UUID `bson:"_id,omitempty"`
-	CustomerId uuid.UUID `bson:"customerId,omitempty"`
-	Quantity   string    `bson:"quantity,omitempty"`
-	Price      float64   `bson:"price,omitempty"`
-	Status     string    `bson:"status,omitempty"`
+	Id         string  `bson:"_id,omitempty" json:"_id"`
+	CustomerId string  `bson:"customerId,omitempty"`
+	Quantity   int     `bson:"quantity,omitempty"`
+	Price      float64 `bson:"price,omitempty"`
+	Status     string  `bson:"status,omitempty"`
 	Address    Address
 	Product    Product
 	CreatedAt  time.Time `bson:"createdAt,omitempty"`

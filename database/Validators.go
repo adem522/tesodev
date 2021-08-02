@@ -36,7 +36,7 @@ var productSchema = bson.M{
 	"required": []string{"_id", "imageUrl", "name"},
 	"properties": bson.M{
 		"_id": bson.M{
-			"bsonType":    "binData",
+			"bsonType":    "string",
 			"description": "must be a binData and is required",
 		},
 		"imageUrl": bson.M{
@@ -59,7 +59,7 @@ var customerSchema = bson.M{
 	"required": []string{"_id", "name", "email", "address", "createdAt", "updatedAt"},
 	"properties": bson.M{
 		"_id": bson.M{
-			"bsonType":    "binData",
+			"bsonType":    "string",
 			"description": "must be a binData and is required",
 		},
 		"name": bson.M{
@@ -110,19 +110,19 @@ var customerValidator = bson.M{
 
 var orderSchema = bson.M{
 	"bsonType": "object",
-	"required": []string{"_id", "customerId", "quantity", "price", "status", "address", "product", "createdAt", "updatedAt"},
+	"required": []string{"_id", "customerId", "address", "product", "quantity", "price", "status", "createdAt", "updatedAt"},
 	"properties": bson.M{
 		"_id": bson.M{
-			"bsonType":    "binData",
+			"bsonType":    "string",
 			"description": "must be a binData and is required",
 		},
 		"customerId": bson.M{
-			"bsonType":    "binData",
+			"bsonType":    "string",
 			"description": "must be a string and is required",
 		},
 		"quantity": bson.M{
 			"bsonType":    "int",
-			"description": "must be a string and is required",
+			"description": "must be a int and is required",
 		},
 		"price": bson.M{
 			"bsonType":    "double",
@@ -131,6 +131,15 @@ var orderSchema = bson.M{
 		"status": bson.M{
 			"bsonType":    "string",
 			"description": "must be a string and is required",
+		},
+
+		"createdAt": bson.M{
+			"bsonType":    "date",
+			"description": "must be a date and is required",
+		},
+		"updatedAt": bson.M{
+			"bsonType":    "date",
+			"description": "must be a date and is required",
 		},
 		"address": bson.M{
 			"bsonType": "object",
@@ -160,8 +169,8 @@ var orderSchema = bson.M{
 			"required": []string{"_id", "imageUrl", "name"},
 			"properties": bson.M{
 				"_id": bson.M{
-					"bsonType":    "binData",
-					"description": "must be a binData and is required",
+					"bsonType":    "string",
+					"description": "must be a string and is required",
 				},
 				"imageUrl": bson.M{
 					"bsonType":    "string",
@@ -173,14 +182,6 @@ var orderSchema = bson.M{
 				},
 			},
 			"description": "must be a object and is required",
-		},
-		"createdAt": bson.M{
-			"bsonType":    "date",
-			"description": "must be a date and is required",
-		},
-		"updatedAt": bson.M{
-			"bsonType":    "date",
-			"description": "must be a date and is required",
 		},
 	},
 }
