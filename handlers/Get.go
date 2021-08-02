@@ -7,12 +7,10 @@ import (
 	"github.com/labstack/echo"
 )
 
-type temp struct {
-	Id string `bson:"_id,omitempty" json:"_id"`
-}
-
 func GetOrder(c echo.Context) error {
-	data := new(temp)
+	data := struct {
+		Id string `bson:"_id" json:"_id"`
+	}{}
 	err := c.Bind(&data)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
@@ -25,7 +23,9 @@ func GetOrder(c echo.Context) error {
 }
 
 func GetCustomer(c echo.Context) error {
-	data := new(temp)
+	data := struct {
+		Id string `bson:"_id" json:"_id"`
+	}{}
 	err := c.Bind(&data)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
@@ -37,12 +37,10 @@ func GetCustomer(c echo.Context) error {
 	return c.JSON(http.StatusOK, data2)
 }
 
-type temp2 struct {
-	CustomerId string `bson:"customerId,omitempty" json:"customerId"`
-}
-
 func GetCustomerOrder(c echo.Context) error {
-	data := new(temp2)
+	data := struct {
+		CustomerId string `bson:"customerId" json:"customerId"`
+	}{}
 	err := c.Bind(&data)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)

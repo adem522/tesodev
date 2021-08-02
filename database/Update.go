@@ -17,12 +17,19 @@ func UpdateOrder(v *models.Order, collectionName string) error {
 		bson.M{"_id": v.Id},
 		bson.D{
 			{Key: "$set", Value: bson.D{
-				{Key: "updatedAt", Value: time.Now()},
+				{Key: "updatedAt", Value: time.Now().Add(3 * time.Hour)},
+				{Key: "address", Value: v.Address},
+				{Key: "product", Value: v.Product},
+				{Key: "quantity", Value: v.Quantity},
+				{Key: "price", Value: v.Price},
+				{Key: "status", Value: v.Status},
+				{Key: "customerId", Value: v.CustomerId},
+				{Key: "createdAt", Value: v.CreatedAt},
 			}},
 		},
 	)
 	if err != nil {
-		fmt.Println("update hatası", err)
+		fmt.Println("update error", err)
 		return err
 	}
 	return nil

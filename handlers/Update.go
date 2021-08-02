@@ -3,7 +3,6 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/adem522/tesodev/database"
 	"github.com/adem522/tesodev/models"
@@ -11,18 +10,15 @@ import (
 )
 
 func UpdateOrder(c echo.Context) error {
-	data := models.Order{
-		UpdatedAt: time.Now(),
-	}
+	data := models.Order{}
 	err := c.Bind(&data)
 	if err != nil {
-		fmt.Println("bind hatası")
+		fmt.Println("bind error")
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	fmt.Println(data.Price)
 	err = database.UpdateOrder(&data, "Order")
 	if err != nil {
-		fmt.Println("update hatası")
+		fmt.Println("update error")
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	return c.JSON(http.StatusOK, data.Id)

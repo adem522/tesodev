@@ -1,4 +1,4 @@
-package database
+package models
 
 import (
 	"go.mongodb.org/mongo-driver/bson"
@@ -27,7 +27,7 @@ var addressSchema = bson.M{
 	},
 }
 
-var addressValidator = bson.M{
+var AddressValidator = bson.M{
 	"$jsonSchema": addressSchema,
 }
 
@@ -50,7 +50,7 @@ var productSchema = bson.M{
 	},
 }
 
-var productValidator = bson.M{
+var ProductValidator = bson.M{
 	"$jsonSchema": productSchema,
 }
 
@@ -104,7 +104,7 @@ var customerSchema = bson.M{
 	},
 }
 
-var customerValidator = bson.M{
+var CustomerValidator = bson.M{
 	"$jsonSchema": customerSchema,
 }
 
@@ -186,6 +186,6 @@ var orderSchema = bson.M{
 	},
 }
 
-var orderValidator = bson.M{
+var OrderValidator = bson.M{
 	"$jsonSchema": orderSchema,
 }

@@ -37,3 +37,8 @@ type Order struct {
 	CreatedAt  time.Time `bson:"createdAt,omitempty"`
 	UpdatedAt  time.Time `bson:"updatedAt,omitempty"`
 }
+
+type Temp struct {
+	Id     string `bson:"_id,omitempty" json:"_id"`
+	Status string `bson:"status,omitempty"`
+}
