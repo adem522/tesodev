@@ -16,11 +16,11 @@ func CreateAddress(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	err = database.Create(&data, "Address")
+	result, err := database.Create(&data, "Address")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, "ok moruk")
+	return c.JSON(http.StatusOK, result)
 }
 
 func CreateProduct(c echo.Context) error {
@@ -31,11 +31,11 @@ func CreateProduct(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	err = database.Create(&data, "Product")
+	result, err := database.Create(&data, "Product")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, data.Id)
+	return c.JSON(http.StatusOK, result)
 }
 
 func CreateOrder(c echo.Context) error {
@@ -48,11 +48,11 @@ func CreateOrder(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	err = database.Create(&data, "Order")
+	result, err := database.Create(&data, "Order")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, data.Id)
+	return c.JSON(http.StatusOK, result)
 }
 
 func CreateCustomer(c echo.Context) error {
@@ -65,11 +65,11 @@ func CreateCustomer(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	err = database.Create(&data, "Customer")
+	result, err := database.Create(&data, "Customer")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, data.Id)
+	return c.JSON(http.StatusOK, result)
 }
 
 func CreateCollections(c echo.Context) error {

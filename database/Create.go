@@ -8,19 +8,19 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func Create(v interface{}, collectionName string) error {
+func Create(v interface{}, collectionName string) (interface{}, error) {
 	client, ctx, cancel := Connect()
 	defer Close(client, ctx, cancel)
 	data, err := bson.Marshal(v)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	collection := client.Database("tesodev").Collection(collectionName)
-	_, err = collection.InsertOne(ctx, data)
+	result, err := collection.InsertOne(ctx, data)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return result.InsertedID, nil
 }
 
 func CreateCollections() error {
