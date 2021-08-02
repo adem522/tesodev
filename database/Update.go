@@ -11,7 +11,6 @@ import (
 func UpdateOrder(v *models.Order, collectionName string) error {
 	client, ctx, cancel := Connect()
 	defer Close(client, ctx, cancel)
-	//v.UpdatedAt = time.Now()
 	collection := client.Database("tesodev").Collection(collectionName)
 	_, err := collection.UpdateOne(ctx,
 		bson.M{"_id": v.Id},
@@ -38,7 +37,6 @@ func UpdateOrder(v *models.Order, collectionName string) error {
 func UpdateCustomer(v *models.Customer, collectionName string) error {
 	client, ctx, cancel := Connect()
 	defer Close(client, ctx, cancel)
-	//v.UpdatedAt = time.Now()
 	collection := client.Database("tesodev").Collection(collectionName)
 	_, err := collection.UpdateOne(ctx,
 		bson.M{"_id": v.Id},

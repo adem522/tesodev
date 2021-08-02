@@ -27,32 +27,23 @@ func CreateCollections() error {
 	client, ctx, cancel := Connect()
 	defer Close(client, ctx, cancel)
 	client.Database("tesodev").Drop(ctx) // if exist
-	opt := options.CreateCollection().SetValidator(models.AddressValidator)
-	err := client.Database("tesodev").CreateCollection(ctx, "Address", opt)
-	if err != nil {
-		return err
-	}
-	fmt.Println("Address Collection Successfully created")
 
-	opt = options.CreateCollection().SetValidator(models.ProductValidator)
-	err = client.Database("tesodev").CreateCollection(ctx, "Product", opt)
-	if err != nil {
-		return err
+	tables := []struct {
+		data      string
+		validator *options.CreateCollectionOptions
+	}{
+		{data: "Address", validator: options.CreateCollection().SetValidator(models.AddressValidator)},
+		{data: "Product", validator: options.CreateCollection().SetValidator(models.ProductValidator)},
+		{data: "Customer", validator: options.CreateCollection().SetValidator(models.CustomerValidator)},
+		{data: "Order", validator: options.CreateCollection().SetValidator(models.OrderValidator)},
 	}
-	fmt.Println("Product Collection Successfully created")
 
-	opt = options.CreateCollection().SetValidator(models.CustomerValidator)
-	err = client.Database("tesodev").CreateCollection(ctx, "Customer", opt)
-	if err != nil {
-		return err
+	for _, table := range tables {
+		err := client.Database("tesodev").CreateCollection(ctx, table.data, table.validator)
+		if err != nil {
+			return err
+		}
+		fmt.Println(table.data, "Collection Successfully created")
 	}
-	fmt.Println("Customer Collection Successfully created")
-
-	opt = options.CreateCollection().SetValidator(models.OrderValidator)
-	err = client.Database("tesodev").CreateCollection(ctx, "Order", opt)
-	if err != nil {
-		return err
-	}
-	fmt.Println("Order Collection Successfully created")
 	return nil
 }
