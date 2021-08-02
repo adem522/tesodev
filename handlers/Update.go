@@ -23,3 +23,17 @@ func UpdateOrder(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, data.Id)
 }
+func UpdateCustomer(c echo.Context) error {
+	data := models.Customer{}
+	err := c.Bind(&data)
+	if err != nil {
+		fmt.Println("bind error")
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	err = database.UpdateCustomer(&data, "Customer")
+	if err != nil {
+		fmt.Println("update error")
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, data.Id)
+}

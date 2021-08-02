@@ -25,7 +25,8 @@ func main() {
 	e.POST("/validate", handlers.Validate)         //check validate with customer id
 
 	update := e.Group("/update")
-	update.POST("/order", handlers.UpdateOrder) //update order with models.order
+	update.POST("/order", handlers.UpdateOrder)       //update order with models.order
+	update.POST("/customer", handlers.UpdateCustomer) //update customer with models.customer
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

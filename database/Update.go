@@ -34,3 +34,27 @@ func UpdateOrder(v *models.Order, collectionName string) error {
 	}
 	return nil
 }
+
+func UpdateCustomer(v *models.Customer, collectionName string) error {
+	client, ctx, cancel := Connect()
+	defer Close(client, ctx, cancel)
+	//v.UpdatedAt = time.Now()
+	collection := client.Database("tesodev").Collection(collectionName)
+	_, err := collection.UpdateOne(ctx,
+		bson.M{"_id": v.Id},
+		bson.D{
+			{Key: "$set", Value: bson.D{
+				{Key: "name", Value: v.Name},
+				{Key: "email", Value: v.Email},
+				{Key: "address", Value: v.Address},
+				{Key: "updatedAt", Value: time.Now().Add(3 * time.Hour)},
+				{Key: "createdAt", Value: v.CreatedAt},
+			}},
+		},
+	)
+	if err != nil {
+		fmt.Println("update error", err)
+		return err
+	}
+	return nil
+}

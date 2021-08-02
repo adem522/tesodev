@@ -15,7 +15,7 @@ func GetOrder(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	data2, err := database.Get(data.Id, "Order")
+	data2, err := database.Get("_id", data.Id, "Order")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
@@ -30,7 +30,7 @@ func GetCustomer(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	data2, err := database.Get(data.Id, "Customer")
+	data2, err := database.Get("_id", data.Id, "Customer")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
@@ -45,7 +45,7 @@ func GetCustomerOrder(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	data2, err := database.GetCustomerOrder(data.CustomerId, "Order")
+	data2, err := database.Get("customerId", data.CustomerId, "Order")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
