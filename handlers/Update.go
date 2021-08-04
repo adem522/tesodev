@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"deneme-structHandler/database"
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -12,7 +11,6 @@ import (
 func (col *Collect) Update(c echo.Context) error {
 	data := bson.M{}
 	err := c.Bind(&data)
-	fmt.Println(data["_id"])
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}

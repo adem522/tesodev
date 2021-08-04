@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -17,7 +16,6 @@ func Update(data bson.M, col *mongo.Collection) error {
 	)
 
 	if err != nil {
-		fmt.Println("update error", err)
 		return err
 	}
 	return nil
