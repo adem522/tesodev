@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func (col *Order) ChangeStatus(c echo.Context) error {
+func (col *Collect) ChangeStatus(c echo.Context) error {
 	data := struct {
 		Id     string `bson:"_id,omitempty" json:"_id"`
 		Status string `bson:"status,omitempty"`
@@ -16,7 +16,7 @@ func (col *Order) ChangeStatus(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	err = database.ChangeStatus(data.Id, data.Status, col.Collection)
+	err = database.ChangeStatus(data.Id, data.Status, col.Col)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}

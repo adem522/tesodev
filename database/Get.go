@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func Get(keyWord, id string, col *mongo.Collection) (interface{}, error) {
+func Get(keyWord, id string, col *mongo.Collection) ([]bson.M, error) {
 	filterCursor := new(mongo.Cursor)
 	var err error
 	if id != "" {

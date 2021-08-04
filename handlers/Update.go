@@ -2,32 +2,21 @@ package handlers
 
 import (
 	"deneme-structHandler/database"
+	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/labstack/echo"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (col *Order) Update(c echo.Context) error {
-	err := c.Bind(&col)
-	col.UpdatedAt = time.Now().Add(3 * time.Hour)
+func (col *Collect) Update(c echo.Context) error {
+	data := bson.M{}
+	err := c.Bind(&data)
+	fmt.Println(data["_id"])
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	err = database.Update(&col.Id, col, col.Collection)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, false)
-	}
-	return c.JSON(http.StatusOK, true)
-}
-
-func (col *Customer) Update(c echo.Context) error {
-	err := c.Bind(&col)
-	col.UpdatedAt = time.Now().Add(3 * time.Hour)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, false)
-	}
-	err = database.Update(&col.Id, col, col.Collection)
+	err = database.Update(data, col.Col)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}

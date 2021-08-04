@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func (col *Customer) Validate(c echo.Context) error {
+func (col *Collect) Validate(c echo.Context) error {
 	data := struct {
 		Id string `bson:"_id" json:"_id"`
 	}{}
@@ -15,7 +15,7 @@ func (col *Customer) Validate(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	data2 := database.Validate(&data.Id, col.Collection)
+	data2 := database.Validate(&data.Id, col.Col)
 	if data2 {
 		return c.JSON(http.StatusOK, data2)
 	}
