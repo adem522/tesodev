@@ -9,8 +9,8 @@ import (
 )
 
 func (col *Order) Update(c echo.Context) error {
-	col.UpdatedAt = time.Now().Add(3 * time.Hour)
 	err := c.Bind(&col)
+	col.UpdatedAt = time.Now().Add(3 * time.Hour)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
