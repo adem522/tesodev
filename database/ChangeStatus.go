@@ -1,15 +1,14 @@
 package database
 
 import (
+	"context"
+
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func ChangeStatus(id, status, collectionName string) error {
-	client, ctx, cancel := Connect()
-	defer Close(client, ctx, cancel)
-
-	collection := client.Database("tesodev").Collection(collectionName)
-	_, err := collection.UpdateOne(ctx,
+func ChangeStatus(id, status string, col *mongo.Collection) error {
+	_, err := col.UpdateOne(context.TODO(),
 		bson.M{"_id": id},
 		bson.D{
 			{Key: "$set", Value: bson.D{

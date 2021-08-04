@@ -1,22 +1,21 @@
 package database
 
 import (
+	"context"
+	"deneme-structHandler/models"
 	"fmt"
 
-	"github.com/adem522/tesodev/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func Create(v interface{}, collectionName string) (interface{}, error) {
-	client, ctx, cancel := Connect()
-	defer Close(client, ctx, cancel)
-	data, err := bson.Marshal(v)
+func Create(data interface{}, col *mongo.Collection) (interface{}, error) {
+	data, err := bson.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
-	collection := client.Database("tesodev").Collection(collectionName)
-	result, err := collection.InsertOne(ctx, data)
+	result, err := col.InsertOne(context.TODO(), data)
 	if err != nil {
 		return nil, err
 	}
@@ -24,9 +23,9 @@ func Create(v interface{}, collectionName string) (interface{}, error) {
 }
 
 func CreateCollections() error {
-	client, ctx, cancel := Connect()
-	defer Close(client, ctx, cancel)
-	client.Database("tesodev").Drop(ctx) // if exist
+	client := Connect()
+	defer Close(client)
+	client.Database("tesodev").Drop(context.TODO()) // if exist
 
 	tables := []struct {
 		data      string
@@ -39,7 +38,7 @@ func CreateCollections() error {
 	}
 
 	for _, table := range tables {
-		err := client.Database("tesodev").CreateCollection(ctx, table.data, table.validator)
+		err := client.Database("tesodev").CreateCollection(context.TODO(), table.data, table.validator)
 		if err != nil {
 			return err
 		}

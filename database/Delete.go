@@ -1,18 +1,15 @@
 package database
 
 import (
+	"context"
 	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func Delete(id *string, collectionName string) error {
-	client, ctx, cancel := Connect()
-	defer Close(client, ctx, cancel)
-
-	collection := client.Database("tesodev").Collection(collectionName)
-	result, err := collection.DeleteOne(ctx, bson.M{"_id": id})
-	fmt.Println(result.DeletedCount)
+func Delete(id *string, col *mongo.Collection) error {
+	result, err := col.DeleteOne(context.TODO(), bson.M{"_id": id})
 	if err != nil || result.DeletedCount == 0 {
 		return fmt.Errorf("deleted count 0 or %w ", err)
 	}

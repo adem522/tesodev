@@ -1,13 +1,13 @@
 package handlers
 
 import (
+	"deneme-structHandler/database"
 	"net/http"
 
-	"github.com/adem522/tesodev/database"
 	"github.com/labstack/echo"
 )
 
-func Validate(c echo.Context) error {
+func (col *Customer) Validate(c echo.Context) error {
 	data := struct {
 		Id string `bson:"_id" json:"_id"`
 	}{}
@@ -15,7 +15,7 @@ func Validate(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	data2 := database.Validate(&data.Id, "Customer")
+	data2 := database.Validate(&data.Id, col.Collection)
 	if data2 {
 		return c.JSON(http.StatusOK, data2)
 	}

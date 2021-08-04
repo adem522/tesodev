@@ -1,76 +1,15 @@
 package handlers
 
 import (
-	"net/http"
+	"deneme-structHandler/database"
+	"fmt"
 	"time"
 
-	"github.com/adem522/tesodev/database"
-	"github.com/adem522/tesodev/models"
+	"net/http"
+
 	"github.com/labstack/echo"
 	uuid "github.com/satori/go.uuid"
 )
-
-func CreateAddress(c echo.Context) error {
-	data := models.Address{}
-	err := c.Bind(&data)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-	result, err := database.Create(&data, "Address")
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-	return c.JSON(http.StatusOK, result)
-}
-
-func CreateProduct(c echo.Context) error {
-	data := models.Product{
-		Id: uuid.NewV4().String(),
-	}
-	err := c.Bind(&data)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-	result, err := database.Create(&data, "Product")
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-	return c.JSON(http.StatusOK, result)
-}
-
-func CreateOrder(c echo.Context) error {
-	data := models.Order{
-		Id:        uuid.NewV4().String(),
-		CreatedAt: time.Now().Add(3 * time.Hour),
-		UpdatedAt: time.Now().Add(3 * time.Hour),
-	}
-	err := c.Bind(&data)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-	result, err := database.Create(&data, "Order")
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-	return c.JSON(http.StatusOK, result)
-}
-
-func CreateCustomer(c echo.Context) error {
-	data := models.Customer{
-		Id:        uuid.NewV4().String(),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	}
-	err := c.Bind(&data)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-	result, err := database.Create(&data, "Customer")
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-	return c.JSON(http.StatusOK, result)
-}
 
 func CreateCollections(c echo.Context) error {
 	err := database.CreateCollections()
@@ -80,4 +19,67 @@ func CreateCollections(c echo.Context) error {
 		})
 	}
 	return c.JSON(http.StatusOK, "All collection successfully created.")
+}
+
+func (col *Address) Create(c echo.Context) error {
+	data := Address{}
+	err := c.Bind(&data)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	result, err := database.Create(data, col.Collection)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, result)
+}
+
+func (col *Product) Create(c echo.Context) error {
+	data := Product{
+		Id: uuid.NewV4().String(),
+	}
+	err := c.Bind(&data)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	result, err := database.Create(data, col.Collection)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, result)
+}
+
+func (col *Customer) Create(c echo.Context) error {
+	data := Customer{
+		Id:        uuid.NewV4().String(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	err := c.Bind(&data)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	result, err := database.Create(data, col.Collection)
+	if err != nil {
+		fmt.Println(err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, result)
+}
+
+func (col *Order) Create(c echo.Context) error {
+	data := Order{
+		Id:        uuid.NewV4().String(),
+		CreatedAt: time.Now().Add(3 * time.Hour),
+		UpdatedAt: time.Now().Add(3 * time.Hour),
+	}
+	err := c.Bind(&data)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	result, err := database.Create(data, col.Collection)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, result)
 }

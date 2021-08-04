@@ -1,38 +1,34 @@
 package handlers
 
 import (
-	"fmt"
+	"deneme-structHandler/database"
 	"net/http"
+	"time"
 
-	"github.com/adem522/tesodev/database"
-	"github.com/adem522/tesodev/models"
 	"github.com/labstack/echo"
 )
 
-func UpdateOrder(c echo.Context) error {
-	data := models.Order{}
-	err := c.Bind(&data)
+func (col *Order) Update(c echo.Context) error {
+	col.UpdatedAt = time.Now().Add(3 * time.Hour)
+	err := c.Bind(&col)
 	if err != nil {
-		fmt.Println("bind error")
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	err = database.UpdateOrder(&data, "Order")
+	err = database.Update(&col.Id, col, col.Collection)
 	if err != nil {
-		fmt.Println("update error")
 		return c.JSON(http.StatusBadRequest, false)
 	}
 	return c.JSON(http.StatusOK, true)
 }
-func UpdateCustomer(c echo.Context) error {
-	data := models.Customer{}
-	err := c.Bind(&data)
+
+func (col *Customer) Update(c echo.Context) error {
+	err := c.Bind(&col)
+	col.UpdatedAt = time.Now().Add(3 * time.Hour)
 	if err != nil {
-		fmt.Println("bind error")
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	err = database.UpdateCustomer(&data, "Customer")
+	err = database.Update(&col.Id, col, col.Collection)
 	if err != nil {
-		fmt.Println("update error")
 		return c.JSON(http.StatusBadRequest, false)
 	}
 	return c.JSON(http.StatusOK, true)

@@ -1,14 +1,14 @@
 package database
 
 import (
+	"context"
+
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func Validate(id *string, collectionName string) bool {
-	client, ctx, cancel := Connect()
-	defer Close(client, ctx, cancel)
+func Validate(id *string, col *mongo.Collection) bool {
 	data2 := bson.M{}
-	collection := client.Database("tesodev").Collection(collectionName)
-	err := collection.FindOne(ctx, bson.M{"_id": id}).Decode(&data2)
+	err := col.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&data2)
 	return err == nil
 }

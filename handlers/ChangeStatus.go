@@ -1,13 +1,13 @@
 package handlers
 
 import (
+	"deneme-structHandler/database"
 	"net/http"
 
-	"github.com/adem522/tesodev/database"
 	"github.com/labstack/echo"
 )
 
-func ChangeStatus(c echo.Context) error {
+func (col *Order) ChangeStatus(c echo.Context) error {
 	data := struct {
 		Id     string `bson:"_id,omitempty" json:"_id"`
 		Status string `bson:"status,omitempty"`
@@ -16,7 +16,7 @@ func ChangeStatus(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	err = database.ChangeStatus(data.Id, data.Status, "Order")
+	err = database.ChangeStatus(data.Id, data.Status, col.Collection)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}

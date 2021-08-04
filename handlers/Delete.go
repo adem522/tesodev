@@ -1,42 +1,37 @@
 package handlers
 
 import (
-	"fmt"
+	"deneme-structHandler/database"
 	"net/http"
 
-	"github.com/adem522/tesodev/database"
 	"github.com/labstack/echo"
 )
 
-func DeleteOrder(c echo.Context) error {
+func (col *Order) Delete(c echo.Context) error {
 	data := struct {
 		Id string `bson:"_id" json:"_id"`
 	}{}
 	err := c.Bind(&data)
 	if err != nil {
-		fmt.Println("bind error")
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	err = database.Delete(&data.Id, "Order")
+	err = database.Delete(&data.Id, col.Collection)
 	if err != nil {
-		fmt.Println("update error")
 		return c.JSON(http.StatusBadRequest, false)
 	}
 	return c.JSON(http.StatusOK, true)
 }
 
-func DeleteCustomer(c echo.Context) error {
+func (col *Customer) Delete(c echo.Context) error {
 	data := struct {
 		Id string `bson:"_id" json:"_id"`
 	}{}
 	err := c.Bind(&data)
 	if err != nil {
-		fmt.Println("bind error")
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	err = database.Delete(&data.Id, "Customer")
+	err = database.Delete(&data.Id, col.Collection)
 	if err != nil {
-		fmt.Println("update error")
 		return c.JSON(http.StatusBadRequest, false)
 	}
 	return c.JSON(http.StatusOK, true)
