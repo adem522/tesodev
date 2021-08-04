@@ -30,6 +30,11 @@ func main() {
 	create.POST("/order", order.Create)         //create order with models.order
 	create.POST("/customer", customer.Create)   //insert customer with models.customer
 
+	get := e.Group("/get")
+	get.POST("/order", order.Get)                      //return all order when not take id
+	get.POST("/customer", customer.Get)                //return all customer when not take id
+	get.POST("/customerOrder", order.GetCustomerOrder) //return all customer order
+
 	e.POST("/changeStatus", order.ChangeStatus) //change status with status and order id
 	e.POST("/validate", customer.Validate)      //check validate with customer id
 
