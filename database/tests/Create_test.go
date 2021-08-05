@@ -4,9 +4,10 @@ import (
 	"deneme-structHandler/database"
 	"deneme-structHandler/handlers"
 	"testing"
+	"time"
 
+	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func TestCreateCollection(t *testing.T) {
@@ -17,121 +18,111 @@ func TestCreateCollection(t *testing.T) {
 }
 
 func TestCreateNil(t *testing.T) {
-	_, err := database.Create(nil, &mongo.Collection{}, "deneme")
+	client := database.Connect()
+	defer database.Close(client)
+	address := handlers.Collect{
+		Col:  client.Database("tesodev").Collection("Address"),
+		Name: "Address",
+	}
+	data := bson.M{}
+	_, err := database.Create(data, address.Col, "Address")
 	if err == nil {
 		t.Errorf("Expected error, received %v", err)
 	}
 }
 
-/*
-func TestCreateAddressNil(t *testing.T) {
-	data := struct{}{}
-	err := database.Create(data, "Address")
-	if err == nil {
-		t.Errorf("Expected error, received %v", err)
-	}
-}*/
-
 func TestCreateAddress(t *testing.T) {
 	client := database.Connect()
 	defer database.Close(client)
-	address := handlers.Collect{
+	collection := handlers.Collect{
 		Col:  client.Database("tesodev").Collection("Address"),
-		Name: "address",
+		Name: "Address",
 	}
 	data := bson.M{
 		"addressLine": "example addressline",
 		"city":        "example cit",
 		"country":     "example country",
-		"cityCode":    1,
+		"cityCode":    1.0,
 	}
-	_, err := database.Create(data, address.Col, address.Name)
+	_, err := database.Create(data, collection.Col, collection.Name)
 	if err != nil {
 		t.Errorf("Expected nil, received %v", err)
 	}
 }
 
-/*
 func TestCreateProduct(t *testing.T) {
-	data := struct {
-		Id       string `bson:"_id,omitempty" json:"_id"`
-		ImageUrl string `bson:"imageUrl,omitempty"`
-		Name     string `bson:"name,omitempty"`
-	}{
-		Id:       uuid.NewV4().String(),
-		ImageUrl: "example imageUrl",
-		Name:     "example name",
+	client := database.Connect()
+	defer database.Close(client)
+	collection := handlers.Collect{
+		Col:  client.Database("tesodev").Collection("Product"),
+		Name: "Product",
 	}
-	err := database.Create(data, "Product")
+	data := bson.M{
+		"_id":      uuid.NewV4().String(),
+		"imageUrl": "example imageUrl",
+		"name":     "example name",
+	}
+	_, err := database.Create(data, collection.Col, collection.Name)
 	if err != nil {
 		t.Errorf("Expected nil, received %v", err)
 	}
 }
-func TestCreateProductNil(t *testing.T) {
-	data := struct{}{}
-	err := database.Create(data, "Product")
-	if err == nil {
-		t.Errorf("Expected error, received %v", err)
-	}
-}
-func TestCreateCustomer(t *testing.T) {
-	data := models.Customer{
-		Id:    uuid.NewV4().String(),
-		Name:  "example customer",
-		Email: "example@hotmail.com",
-		Address: models.Address{
-			AddressLine: "",
-			City:        "example city",
-			Country:     "example country",
-			CityCode:    1,
-		},
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	}
 
-	err := database.Create(data, "Customer")
+func TestCreateCustomer(t *testing.T) {
+	client := database.Connect()
+	defer database.Close(client)
+	collection := handlers.Collect{
+		Col:  client.Database("tesodev").Collection("Customer"),
+		Name: "Customer",
+	}
+	data := bson.M{
+		"_id":   uuid.NewV4().String(),
+		"name":  "example customer",
+		"email": "example@hotmail.com",
+		"address": bson.M{
+			"addressLine": "",
+			"city":        "example city",
+			"country":     "example country",
+			"cityCode":    1.0,
+		},
+		"createdAt": time.Now(),
+		"updatedAt": time.Now(),
+	}
+	_, err := database.Create(data, collection.Col, collection.Name)
 	if err != nil {
 		t.Errorf("Expected nil, received %v", err)
-	}
-}
-func TestCreateCustomerNil(t *testing.T) {
-	data := struct{}{}
-	err := database.Create(data, "Customer")
-	if err == nil {
-		t.Errorf("Expected error, received %v", err)
 	}
 }
 func TestCreateOrder(t *testing.T) {
-	data := models.Order{
-		Id:         uuid.NewV4().String(),
-		CustomerId: uuid.NewV4().String(),
-		Quantity:   1,
-		Price:      2.4,
-		Status:     "available",
-		Address: models.Address{
-			AddressLine: "",
-			City:        "example city",
-			Country:     "example country",
-			CityCode:    1},
-		Product: models.Product{
-			Id:       uuid.NewV4().String(),
-			ImageUrl: "example imageUrl",
-			Name:     "example name",
+	client := database.Connect()
+	defer database.Close(client)
+	collection := handlers.Collect{
+		Col:  client.Database("tesodev").Collection("Order"),
+		Name: "Order",
+	}
+	data := bson.M{
+		"_id":        uuid.NewV4().String(),
+		"customerId": uuid.NewV4().String(),
+		"quantity":   1.0,
+		"price":      2.4,
+		"status":     "available",
+		"address": bson.M{
+			"addressLine": "",
+			"city":        "example city",
+			"country":     "example country",
+			"cityCode":    1.0,
 		},
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		"product": bson.M{
+			"_id":      uuid.NewV4().String(),
+			"imageUrl": "example imageUrl",
+			"name":     "example name",
+		},
+		"createdAt": time.Now(),
+		"updatedAt": time.Now(),
 	}
 
-	err := database.Create(data, "Order")
+	_, err := database.Create(data, collection.Col, collection.Name)
 	if err != nil {
 		t.Errorf("Expected nil, received %v", err)
 	}
 }
-func TestCreateOrderNil(t *testing.T) {
-	data := struct{}{}
-	err := database.Create(data, "Order")
-	if err == nil {
-		t.Errorf("Expected error, received %v", err)
-	}
-}
-*/

@@ -15,7 +15,7 @@ import (
 
 func Create(data bson.M, col *mongo.Collection, name string) (result *mongo.InsertOneResult, err error) {
 	if name == "" {
-		result, err = nil, fmt.Errorf("error from database/create - collection name not found ")
+		result, err = nil, fmt.Errorf(" collection name not found")
 	} else if name == "Address" {
 		result, err = col.InsertOne(context.TODO(), data)
 	} else if name == "Product" {
@@ -28,7 +28,7 @@ func Create(data bson.M, col *mongo.Collection, name string) (result *mongo.Inse
 		result, err = col.InsertOne(context.TODO(), data)
 	}
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error from database/create %w", err)
 	}
 	return result, nil
 }
