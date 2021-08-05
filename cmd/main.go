@@ -12,19 +12,22 @@ func main() {
 	defer database.Close(client)
 	address := handlers.Collect{
 		Col:  client.Database("tesodev").Collection("Address"),
-		Name: "address",
+		Name: "Address",
 	}
 	product := handlers.Collect{
 		Col:  client.Database("tesodev").Collection("Product"),
-		Name: "product",
+		Name: "Product",
 	}
 	order := handlers.Collect{
 		Col:  client.Database("tesodev").Collection("Order"),
-		Name: "order",
+		Name: "Order",
 	}
 	customer := handlers.Collect{
 		Col:  client.Database("tesodev").Collection("Customer"),
-		Name: "customer",
+		Name: "Customer",
+	}
+	customer2 := handlers.Collect{
+		Col: client.Database("tesodev").Collection("Customer"),
 	}
 	e := echo.New()
 	create := e.Group("/create")
@@ -33,6 +36,7 @@ func main() {
 	create.POST("/address", address.Create)     //insert product with models.product
 	create.POST("/order", order.Create)         //create order with models.order
 	create.POST("/customer", customer.Create)   //insert customer with models.customer
+	create.POST("/customer2", customer2.Create) //insert customer with models.customer
 
 	get := e.Group("/get")
 	get.POST("/order", order.Get)         //return all order when not take id

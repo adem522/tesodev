@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+
 	"deneme-structHandler/models"
 	"fmt"
 	"time"
@@ -13,20 +14,14 @@ import (
 )
 
 func Create(data bson.M, col *mongo.Collection, name string) (result *mongo.InsertOneResult, err error) {
-	if name == "address" {
+	if name == "" {
+		result, err = nil, fmt.Errorf("error from database/create - collection name not found ")
+	} else if name == "Address" {
 		result, err = col.InsertOne(context.TODO(), data)
-	}
-	if name == "product" {
+	} else if name == "Product" {
 		data["_id"] = uuid.NewV4().String()
 		result, err = col.InsertOne(context.TODO(), data)
-	}
-	if name == "customer" {
-		data["_id"] = uuid.NewV4().String()
-		data["createdAt"] = time.Now().Add(3 * time.Hour)
-		data["updatedAt"] = time.Now().Add(3 * time.Hour)
-		result, err = col.InsertOne(context.TODO(), data)
-	}
-	if name == "order" {
+	} else if name == "Customer" || name == "Order" {
 		data["_id"] = uuid.NewV4().String()
 		data["createdAt"] = time.Now().Add(3 * time.Hour)
 		data["updatedAt"] = time.Now().Add(3 * time.Hour)
@@ -56,7 +51,7 @@ func CreateCollections() error {
 	for _, table := range tables {
 		err := client.Database("tesodev").CreateCollection(context.TODO(), table.data, table.validator)
 		if err != nil {
-			return err
+			return fmt.Errorf("error from database/createCollections - %w", err)
 		}
 		fmt.Println(table.data, "Collection Successfully created")
 	}

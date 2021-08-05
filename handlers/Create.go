@@ -7,13 +7,7 @@ import (
 
 	"github.com/labstack/echo"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
-
-type Collect struct {
-	Col  *mongo.Collection
-	Name string
-}
 
 func CreateCollections(c echo.Context) error {
 	err := database.CreateCollections()
