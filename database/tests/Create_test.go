@@ -1,12 +1,12 @@
 package database
 
 import (
+	"deneme-structHandler/database"
 	"testing"
 	"time"
 
-	"github.com/adem522/tesodev/database"
-	"github.com/adem522/tesodev/models"
 	uuid "github.com/satori/go.uuid"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func TestCreateCollection(t *testing.T) {
@@ -17,7 +17,7 @@ func TestCreateCollection(t *testing.T) {
 }
 
 func TestCreateNil(t *testing.T) {
-	err := database.Create(nil, "")
+	_, err := database.Create(nil, &mongo.Collection{}, "deneme")
 	if err == nil {
 		t.Errorf("Expected error, received %v", err)
 	}
