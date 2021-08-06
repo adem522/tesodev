@@ -26,9 +26,6 @@ func main() {
 		Col:  client.Database("tesodev").Collection("Customer"),
 		Name: "Customer",
 	}
-	customer2 := handlers.Collect{
-		Col: client.Database("tesodev").Collection("Customer"),
-	}
 	e := echo.New()
 	create := e.Group("/create")
 	create.GET("/", handlers.CreateCollections) //create empty collections with validator
@@ -36,7 +33,6 @@ func main() {
 	create.POST("/address", address.Create)     //insert product with models.product
 	create.POST("/order", order.Create)         //create order with models.order
 	create.POST("/customer", customer.Create)   //insert customer with models.customer
-	create.POST("/customer2", customer2.Create) //insert customer with models.customer
 
 	get := e.Group("/get")
 	get.POST("/order", order.Get)         //return all order when not take id

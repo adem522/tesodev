@@ -13,20 +13,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func Create(data bson.M, col *mongo.Collection, name string) (result *mongo.InsertOneResult, err error) {
-	if name == "" {
-		result, err = nil, fmt.Errorf(" collection name not found")
-	} else if name == "Address" {
-		result, err = col.InsertOne(context.TODO(), data)
-	} else if name == "Product" {
-		data["_id"] = uuid.NewV4().String()
-		result, err = col.InsertOne(context.TODO(), data)
-	} else if name == "Customer" || name == "Order" {
-		data["_id"] = uuid.NewV4().String()
-		data["createdAt"] = time.Now().Add(3 * time.Hour)
-		data["updatedAt"] = time.Now().Add(3 * time.Hour)
-		result, err = col.InsertOne(context.TODO(), data)
+func Create(request bson.M, col *mongo.Collection, name string) (result *mongo.InsertOneResult, err error) {
+	request, err = determine(request, name)
+	if err != nil {
+		return nil, fmt.Errorf("error from database/create %w", err)
 	}
+	result, err = col.InsertOne(context.TODO(), request)
 	if err != nil {
 		return nil, fmt.Errorf("error from database/create %w", err)
 	}
@@ -39,21 +31,51 @@ func CreateCollections() error {
 	client.Database("tesodev").Drop(context.TODO()) // if exist
 
 	tables := []struct {
-		data      string
+		request   string
 		validator *options.CreateCollectionOptions
 	}{
-		{data: "Address", validator: options.CreateCollection().SetValidator(models.AddressValidator)},
-		{data: "Product", validator: options.CreateCollection().SetValidator(models.ProductValidator)},
-		{data: "Customer", validator: options.CreateCollection().SetValidator(models.CustomerValidator)},
-		{data: "Order", validator: options.CreateCollection().SetValidator(models.OrderValidator)},
+		{request: "Address", validator: options.CreateCollection().SetValidator(models.AddressValidator)},
+		{request: "Product", validator: options.CreateCollection().SetValidator(models.ProductValidator)},
+		{request: "Customer", validator: options.CreateCollection().SetValidator(models.CustomerValidator)},
+		{request: "Order", validator: options.CreateCollection().SetValidator(models.OrderValidator)},
 	}
 
 	for _, table := range tables {
-		err := client.Database("tesodev").CreateCollection(context.TODO(), table.data, table.validator)
+		err := client.Database("tesodev").CreateCollection(context.TODO(), table.request, table.validator)
 		if err != nil {
 			return fmt.Errorf("error from database/createCollections - %w", err)
 		}
-		fmt.Println(table.data, "Collection Successfully created")
+		fmt.Println(table.request, "Collection Successfully created")
 	}
 	return nil
+}
+
+func determine(request bson.M, name string) (bson.M, error) {
+	if name == "" {
+		return nil, fmt.Errorf(" collection name must")
+	} else if name == "Address" {
+		request["cityCode"] = toInt(request, "cityCode")
+	} else if name == "Product" {
+		request["_id"] = uuid.NewV4().String()
+	} else if name == "Customer" || name == "Order" {
+		address := request["address"].(map[string]interface{})
+		request["address"] = bson.M{
+			"city":     address["city"],
+			"country":  address["country"],
+			"cityCode": toInt(address, "cityCode"),
+		}
+		request["_id"] = uuid.NewV4().String()
+		if name == "Order" {
+			request["quantity"] = toInt(request, "quantity")
+		}
+		request["createdAt"] = time.Now().Add(3 * time.Hour)
+		request["updatedAt"] = time.Now().Add(3 * time.Hour)
+	} else {
+		return nil, fmt.Errorf(" collection name not found")
+	}
+	return request, nil
+}
+
+func toInt(request bson.M, name string) int {
+	return int(request[name].(float64)) //postman send double but database validator is int
 }

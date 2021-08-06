@@ -21,8 +21,8 @@ var addressSchema = bson.M{
 			"description": "must be a string and is required",
 		},
 		"cityCode": bson.M{
-			"bsonType":    "double",
-			"description": "must be a string and is required",
+			"bsonType":    "int",
+			"description": "must be a int and is required",
 		},
 	},
 }
@@ -87,7 +87,7 @@ var customerSchema = bson.M{
 					"description": "must be a string and is required",
 				},
 				"cityCode": bson.M{
-					"bsonType":    "double",
+					"bsonType":    "int",
 					"description": "must be a int and is required",
 				},
 			},
@@ -121,12 +121,12 @@ var orderSchema = bson.M{
 			"description": "must be a string and is required",
 		},
 		"quantity": bson.M{
-			"bsonType":    "double",
+			"bsonType":    "int",
 			"description": "must be a int and is required",
 		},
 		"price": bson.M{
 			"bsonType":    "double",
-			"description": "must be a object and is required",
+			"description": "must be a double and is required",
 		},
 		"status": bson.M{
 			"bsonType":    "string",
@@ -158,7 +158,7 @@ var orderSchema = bson.M{
 					"description": "must be a string and is required",
 				},
 				"cityCode": bson.M{
-					"bsonType":    "double",
+					"bsonType":    "int",
 					"description": "must be a int and is required",
 				},
 			},
