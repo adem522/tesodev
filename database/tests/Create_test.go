@@ -82,7 +82,7 @@ func TestCreateCustomer(t *testing.T) {
 			"addressLine": "",
 			"city":        "example city",
 			"country":     "example country",
-			"cityCode":    1.0,
+			"cityCode":    1,
 		},
 		"createdAt": time.Now(),
 		"updatedAt": time.Now(),
