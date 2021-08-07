@@ -2,10 +2,11 @@ package database
 
 import (
 	"context"
+	"reflect"
+	"time"
 
 	"deneme-structHandler/models"
 	"fmt"
-	"time"
 
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -13,13 +14,15 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func Create(request bson.M, col *mongo.Collection, name string) (result *mongo.InsertOneResult, err error) {
+func Create(request map[string]interface{}, col *mongo.Collection, name string) (result *mongo.InsertOneResult, err error) {
 	request, err = determine(request, name)
+	fmt.Println("create request", request)
 	if err != nil {
 		return nil, fmt.Errorf("error from database/create %w", err)
 	}
 	result, err = col.InsertOne(context.TODO(), request)
 	if err != nil {
+		fmt.Println("create database error", err)
 		return nil, fmt.Errorf("error from database/create %w", err)
 	}
 	return result, nil
@@ -50,32 +53,30 @@ func CreateCollections() error {
 	return nil
 }
 
-func determine(request bson.M, name string) (bson.M, error) {
+func determine(request map[string]interface{}, name string) (bson.M, error) {
+	fmt.Println("determine request", request)
 	if name == "" {
 		return nil, fmt.Errorf(" collection name must")
 	} else if name == "Address" {
-		request["cityCode"] = toInt(request, "cityCode")
+		request["_id"] = uuid.NewV4().String()
+		toInt(request, "cityCode")
 	} else if name == "Product" {
 		request["_id"] = uuid.NewV4().String()
 	} else if name == "Customer" || name == "Order" {
-		address := request["address"].(map[string]interface{})
-		request["address"] = bson.M{
-			"city":     address["city"],
-			"country":  address["country"],
-			"cityCode": toInt(address, "cityCode"),
-		}
 		request["_id"] = uuid.NewV4().String()
-		if name == "Order" {
-			request["quantity"] = toInt(request, "quantity")
-		}
 		request["createdAt"] = time.Now().Add(3 * time.Hour)
 		request["updatedAt"] = time.Now().Add(3 * time.Hour)
+		toInt(request, "quantity")
+		address := request["address"].(map[string]interface{})
+		toInt(address, "cityCode")
 	} else {
 		return nil, fmt.Errorf(" collection name not found")
 	}
 	return request, nil
 }
 
-func toInt(request bson.M, name string) int {
-	return int(request[name].(float64)) //postman send double but database validator is int
+func toInt(request map[string]interface{}, name string) {
+	if reflect.TypeOf(request[name]) == reflect.TypeOf(1.0) {
+		request[name] = int(request[name].(float64))
+	}
 }

@@ -6,8 +6,12 @@ import (
 
 var addressSchema = bson.M{
 	"bsonType": "object",
-	"required": []string{"city", "cityCode", "country"},
+	"required": []string{"_id", "city", "cityCode", "country"},
 	"properties": bson.M{
+		"_id": bson.M{
+			"bsonType":    "string",
+			"description": "must be a binData and is required",
+		},
 		"addressLine": bson.M{
 			"bsonType":    "string",
 			"description": "must be a string",

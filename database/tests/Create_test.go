@@ -42,7 +42,7 @@ func TestCreateAddress(t *testing.T) {
 		"addressLine": "example addressline",
 		"city":        "example cit",
 		"country":     "example country",
-		"cityCode":    1.0,
+		"cityCode":    1,
 	}
 	_, err := database.Create(data, collection.Col, collection.Name)
 	if err != nil {

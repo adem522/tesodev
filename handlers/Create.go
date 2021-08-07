@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"deneme-structHandler/database"
+	"deneme-structHandler/models"
+	"fmt"
 
 	"net/http"
 
 	"github.com/labstack/echo"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 func CreateCollections(c echo.Context) error {
@@ -19,15 +20,37 @@ func CreateCollections(c echo.Context) error {
 	return c.JSON(http.StatusOK, "All collection successfully created.")
 }
 
-func (col *Collect) Create(c echo.Context) error {
-	data := bson.M{}
-	err := c.Bind(&data)
+func (col *Collect) Create(c echo.Context) (err error) {
+	insertedId := ""
+	data := col.define()
+
+	fmt.Printf("tipler %F\n", data)
+	err = c.Bind(&data)
+	fmt.Printf("tipler %F\n", data)
 	if err != nil {
+		fmt.Println("bind error", err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	result, err := database.Create(data, col.Col, col.Name)
+	result, err := database.Create(data.(map[string]interface{}), col.Col, col.Name)
 	if err != nil {
+		fmt.Println("database error", err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, result)
+	insertedId = result.InsertedID.(string)
+	return c.JSON(http.StatusOK, insertedId)
+
+}
+
+func (col *Collect) define() (data interface{}) {
+	if col.Name == "Address" {
+		return models.Address{}
+	} else if col.Name == "Product" {
+		return models.Product{}
+	} else if col.Name == "Customer" {
+		return models.Customer{}
+	} else if col.Name == "Order" {
+		return models.Order{}
+	} else {
+		return nil
+	}
 }
