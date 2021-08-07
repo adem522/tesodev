@@ -7,7 +7,6 @@ import (
 	"time"
 
 	uuid "github.com/satori/go.uuid"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 func TestCreateCollection(t *testing.T) {
@@ -24,7 +23,7 @@ func TestCreateNil(t *testing.T) {
 		Col:  client.Database("tesodev").Collection("Address"),
 		Name: "Address",
 	}
-	data := bson.M{}
+	data := map[string]interface{}{}
 	_, err := database.Create(data, address.Col, "Address")
 	if err == nil {
 		t.Errorf("Expected error, received %v", err)
@@ -38,7 +37,7 @@ func TestCreateAddress(t *testing.T) {
 		Col:  client.Database("tesodev").Collection("Address"),
 		Name: "Address",
 	}
-	data := bson.M{
+	data := map[string]interface{}{
 		"addressLine": "example addressline",
 		"city":        "example cit",
 		"country":     "example country",
@@ -57,7 +56,7 @@ func TestCreateProduct(t *testing.T) {
 		Col:  client.Database("tesodev").Collection("Product"),
 		Name: "Product",
 	}
-	data := bson.M{
+	data := map[string]interface{}{
 		"_id":      uuid.NewV4().String(),
 		"imageUrl": "example imageUrl",
 		"name":     "example name",
@@ -75,11 +74,11 @@ func TestCreateCustomer(t *testing.T) {
 		Col:  client.Database("tesodev").Collection("Customer"),
 		Name: "Customer",
 	}
-	data := bson.M{
+	data := map[string]interface{}{
 		"_id":   uuid.NewV4().String(),
 		"name":  "example customer",
 		"email": "example@hotmail.com",
-		"address": bson.M{
+		"address": map[string]interface{}{
 			"addressLine": "",
 			"city":        "example city",
 			"country":     "example country",
@@ -100,19 +99,20 @@ func TestCreateOrder(t *testing.T) {
 		Col:  client.Database("tesodev").Collection("Order"),
 		Name: "Order",
 	}
-	data := bson.M{
+
+	data := map[string]interface{}{
 		"_id":        uuid.NewV4().String(),
 		"customerId": uuid.NewV4().String(),
-		"quantity":   1.0,
+		"quantity":   1,
 		"price":      2.4,
 		"status":     "available",
-		"address": bson.M{
+		"address": map[string]interface{}{
 			"addressLine": "",
 			"city":        "example city",
 			"country":     "example country",
-			"cityCode":    1.0,
+			"cityCode":    1,
 		},
-		"product": bson.M{
+		"product": map[string]interface{}{
 			"_id":      uuid.NewV4().String(),
 			"imageUrl": "example imageUrl",
 			"name":     "example name",
@@ -120,7 +120,6 @@ func TestCreateOrder(t *testing.T) {
 		"createdAt": time.Now(),
 		"updatedAt": time.Now(),
 	}
-
 	_, err := database.Create(data, collection.Col, collection.Name)
 	if err != nil {
 		t.Errorf("Expected nil, received %v", err)

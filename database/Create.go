@@ -59,14 +59,16 @@ func determine(request map[string]interface{}, name string) (bson.M, error) {
 		return nil, fmt.Errorf(" collection name must")
 	} else if name == "Address" {
 		request["_id"] = uuid.NewV4().String()
-		toInt(request, "cityCode")
+		toInt(request, "cityCode") //if came double its return to int
 	} else if name == "Product" {
 		request["_id"] = uuid.NewV4().String()
 	} else if name == "Customer" || name == "Order" {
 		request["_id"] = uuid.NewV4().String()
 		request["createdAt"] = time.Now().Add(3 * time.Hour)
 		request["updatedAt"] = time.Now().Add(3 * time.Hour)
-		toInt(request, "quantity")
+		if name == "Order" {
+			toInt(request, "quantity")
+		}
 		address := request["address"].(map[string]interface{})
 		toInt(address, "cityCode")
 	} else {
