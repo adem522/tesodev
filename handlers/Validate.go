@@ -11,8 +11,7 @@ func (col *Collect) Validate(c echo.Context) error {
 	data := struct {
 		Id string `bson:"_id" json:"_id"`
 	}{}
-	err := c.Bind(&data)
-	if err != nil {
+	if err := c.Bind(&data); err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
 	if database.Validate(&data.Id, col.Col) {
