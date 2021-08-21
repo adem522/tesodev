@@ -15,9 +15,8 @@ func (col *Collect) Validate(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	data2 := database.Validate(&data.Id, col.Col)
-	if data2 {
-		return c.JSON(http.StatusOK, data2)
+	if database.Validate(&data.Id, col.Col) {
+		return c.JSON(http.StatusOK, true)
 	}
-	return c.JSON(http.StatusBadRequest, data2)
+	return c.JSON(http.StatusBadRequest, false)
 }
