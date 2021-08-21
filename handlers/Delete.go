@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"deneme-structHandler/database"
 	"net/http"
+	"tesodev/database"
 
 	"github.com/labstack/echo"
 )

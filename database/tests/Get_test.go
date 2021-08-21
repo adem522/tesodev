@@ -1,9 +1,11 @@
 package database
 
 import (
-	"deneme-structHandler/database"
-	"deneme-structHandler/handlers"
+	"tesodev/database"
+	"tesodev/handlers"
 	"testing"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func TestGet(t *testing.T) {
@@ -13,7 +15,7 @@ func TestGet(t *testing.T) {
 		Col:  client.Database("tesodev").Collection("Address"),
 		Name: "Address",
 	}
-	data, err := database.Get("_id", "", address.Col)
+	data, err := database.Get(bson.M{"_id": ""}, address.Col)
 	if err != nil {
 		t.Errorf("expected nil, received err %v", err)
 	}

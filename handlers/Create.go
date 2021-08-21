@@ -1,9 +1,8 @@
 package handlers
 
 import (
-	"deneme-structHandler/database"
-	"deneme-structHandler/models"
-	"fmt"
+	"tesodev/database"
+	"tesodev/models"
 
 	"net/http"
 
@@ -23,17 +22,12 @@ func CreateCollections(c echo.Context) error {
 func (col *Collect) Create(c echo.Context) (err error) {
 	insertedId := ""
 	data := col.define()
-
-	fmt.Printf("tipler %F\n", data)
 	err = c.Bind(&data)
-	fmt.Printf("tipler %F\n", data)
 	if err != nil {
-		fmt.Println("bind error", err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	result, err := database.Create(data.(map[string]interface{}), col.Col, col.Name)
 	if err != nil {
-		fmt.Println("database error", err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	insertedId = result.InsertedID.(string)

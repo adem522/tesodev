@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"time"
 
-	"deneme-structHandler/models"
 	"fmt"
+	"tesodev/models"
 
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -16,13 +16,11 @@ import (
 
 func Create(request map[string]interface{}, col *mongo.Collection, name string) (result *mongo.InsertOneResult, err error) {
 	request, err = determine(request, name)
-	fmt.Println("create request", request)
 	if err != nil {
 		return nil, fmt.Errorf("error from database/create %w", err)
 	}
 	result, err = col.InsertOne(context.TODO(), request)
 	if err != nil {
-		fmt.Println("create database error", err)
 		return nil, fmt.Errorf("error from database/create %w", err)
 	}
 	return result, nil
@@ -54,7 +52,6 @@ func CreateCollections() error {
 }
 
 func determine(request map[string]interface{}, name string) (bson.M, error) {
-	fmt.Println("determine request", request)
 	if name == "" {
 		return nil, fmt.Errorf(" collection name must")
 	} else if name == "Address" {

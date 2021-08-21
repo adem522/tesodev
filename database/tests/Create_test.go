@@ -1,8 +1,8 @@
 package database
 
 import (
-	"deneme-structHandler/database"
-	"deneme-structHandler/handlers"
+	"tesodev/database"
+	"tesodev/handlers"
 	"testing"
 	"time"
 

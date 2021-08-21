@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"deneme-structHandler/database"
 	"fmt"
 	"net/http"
+	"tesodev/database"
 
 	"github.com/labstack/echo"
 	"go.mongodb.org/mongo-driver/bson"

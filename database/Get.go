@@ -7,21 +7,16 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func Get(keyWord, id string, col *mongo.Collection) ([]bson.M, error) {
+func Get(filter bson.M, col *mongo.Collection) (data []bson.M, err error) {
 	filterCursor := new(mongo.Cursor)
-	var err error
-	if id != "" {
-		filterCursor, err = col.Find(context.TODO(), bson.M{keyWord: id})
-		if err != nil {
-			return nil, err
-		}
+	if filter != nil {
+		filterCursor, err = col.Find(context.TODO(), filter)
 	} else {
 		filterCursor, err = col.Find(context.TODO(), bson.M{})
-		if err != nil {
-			return nil, err
-		}
 	}
-	data := []bson.M{}
+	if err != nil {
+		return nil, err
+	}
 	if err = filterCursor.All(context.TODO(), &data); err != nil {
 		return nil, err
 	}

@@ -1,33 +1,32 @@
 package handlers
 
 import (
-	"deneme-structHandler/database"
 	"net/http"
+	"tesodev/database"
 
 	"github.com/labstack/echo"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 func (col *Collect) Get(c echo.Context) error {
-	data := struct {
+	temp := struct {
 		Id         string `bson:"_id" json:"_id"`
 		CustomerId string `bson:"customerId" json:"customerId"`
 	}{}
-	data2 := []bson.M{}
-	err := c.Bind(&data)
+	data := []bson.M{}
+	err := c.Bind(&temp)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	if col.Name == "order" && data.CustomerId != "" {
-		data2, err = database.Get("customerId", data.CustomerId, col.Col)
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, err)
-		}
-		return c.JSON(http.StatusOK, data2)
+	if col.Name == "Order" && temp.CustomerId != "" { //all order with costumerId in Order Collection
+		data, err = database.Get(bson.M{"customerId": temp.CustomerId}, col.Col)
+	} else if temp.Id != "" { // every data with _id in every collection
+		data, err = database.Get(bson.M{"_id": temp.Id}, col.Col)
+	} else { //every data in every collection
+		data, err = database.Get(nil, col.Col)
 	}
-	data2, err = database.Get("_id", data.Id, col.Col)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, data2)
+	return c.JSON(http.StatusOK, data)
 }
