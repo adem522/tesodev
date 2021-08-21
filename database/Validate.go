@@ -8,7 +8,6 @@ import (
 )
 
 func Validate(id *string, col *mongo.Collection) bool {
-	data := bson.M{}
-	err := col.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&data)
+	err := col.FindOne(context.TODO(), bson.M{"_id": id})
 	return err == nil
 }
