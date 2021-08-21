@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func ChangeStatus(id, status string, col *mongo.Collection) error {
+func ChangeStatus(id, status string, col *mongo.Collection) bool {
 	_, err := col.UpdateOne(context.TODO(),
 		bson.M{"_id": id},
 		bson.D{
@@ -16,8 +16,5 @@ func ChangeStatus(id, status string, col *mongo.Collection) error {
 			}},
 		},
 	)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err == nil
 }

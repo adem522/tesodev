@@ -16,9 +16,9 @@ func (col *Collect) ChangeStatus(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	err = database.ChangeStatus(data.Id, data.Status, col.Col)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, false)
+	data2 := database.ChangeStatus(data.Id, data.Status, col.Col)
+	if data2 {
+		return c.JSON(http.StatusOK, data2)
 	}
-	return c.JSON(http.StatusOK, true)
+	return c.JSON(http.StatusBadRequest, data2)
 }

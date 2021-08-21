@@ -52,24 +52,25 @@ func CreateCollections() error {
 }
 
 func determine(request map[string]interface{}, name string) (bson.M, error) {
-	if name == "" {
-		return nil, fmt.Errorf(" collection name must")
-	} else if name == "Address" {
-		request["_id"] = uuid.NewV4().String()
-		toInt(request, "cityCode") //if came double its return to int
-	} else if name == "Product" {
-		request["_id"] = uuid.NewV4().String()
-	} else if name == "Customer" || name == "Order" {
-		request["_id"] = uuid.NewV4().String()
-		request["createdAt"] = time.Now().Add(3 * time.Hour)
-		request["updatedAt"] = time.Now().Add(3 * time.Hour)
-		if name == "Order" {
-			toInt(request, "quantity")
+	if name != "" {
+		request["_id"] = uuid.NewV4().String() //every collection need id
+		if name == "Address" {
+			toInt(request, "cityCode") //if came double its return to int
+		} else if name == "Customer" || name == "Order" {
+			request["createdAt"] = time.Now().Add(3 * time.Hour)
+			request["updatedAt"] = time.Now().Add(3 * time.Hour)
+			if name == "Order" {
+				toInt(request, "quantity") //if came double its return to int
+			}
+			address := request["address"].(map[string]interface{}) //address is a interface
+			toInt(address, "cityCode")                             //if came double its return to int
+		} else if name == "Product" {
+			//product just need id
+		} else {
+			return nil, fmt.Errorf(" collection name not found") //if not nil and not at all these
 		}
-		address := request["address"].(map[string]interface{})
-		toInt(address, "cityCode")
 	} else {
-		return nil, fmt.Errorf(" collection name not found")
+		return nil, fmt.Errorf(" collection name must") //if name nil
 	}
 	return request, nil
 }
