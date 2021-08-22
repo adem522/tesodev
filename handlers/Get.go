@@ -18,11 +18,11 @@ func (col *Collect) Get(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	if col.Name == "Order" && temp.CustomerId != "" { //all order with costumerId in Order Collection
+	if col.Name == "Order" && temp.CustomerId != "" { //		 //all customer order with costumerId in Order Collection
 		data, err = database.Get(bson.M{"customerId": temp.CustomerId}, col.Col)
-	} else if temp.Id != "" { // every data with _id in every collection
+	} else if temp.Id != "" { //						 		// every data with _id in came collection
 		data, err = database.Get(bson.M{"_id": temp.Id}, col.Col)
-	} else { //every data in every collection
+	} else { //										 			//every data in came collection
 		data, err = database.Get(nil, col.Col)
 	}
 	if err != nil {

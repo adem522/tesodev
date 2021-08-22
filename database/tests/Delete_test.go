@@ -13,9 +13,8 @@ func TestDeleteEmptyArg(t *testing.T) {
 		Col:  client.Database("tesodev").Collection("Address"),
 		Name: "Address",
 	}
-	err := database.Delete(nil, address.Col)
-	if err == nil {
-		t.Errorf("expected error, received nil %v", err)
+	if database.Delete(nil, address.Col) {
+		t.Errorf("expected error, received nil")
 	}
 }
 func TestDeleteWithArg(t *testing.T) {
@@ -34,8 +33,7 @@ func TestDeleteWithArg(t *testing.T) {
 	result2 := ""
 	result, _ := database.Create(data, address.Col, address.Col.Name())
 	result2 = result.InsertedID.(string)
-	err := database.Delete(&result2, address.Col)
-	if err != nil {
-		t.Errorf("expected nil, received err %v", err)
+	if database.Delete(&result2, address.Col) {
+		t.Errorf("expected nil, received err")
 	}
 }

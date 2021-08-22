@@ -26,7 +26,7 @@ func Create(request map[string]interface{}, col *mongo.Collection, name string) 
 	return result, nil
 }
 
-func CreateCollections() error {
+func CreateCollections() (err error) {
 	client := Connect()
 	defer Close(client)
 	client.Database("tesodev").Drop(context.TODO()) // if exist
@@ -42,7 +42,7 @@ func CreateCollections() error {
 	}
 
 	for _, table := range tables {
-		err := client.Database("tesodev").CreateCollection(context.TODO(), table.request, table.validator)
+		err = client.Database("tesodev").CreateCollection(context.TODO(), table.request, table.validator)
 		if err != nil {
 			return fmt.Errorf("error from database/createCollections - %w", err)
 		}
