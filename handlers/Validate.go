@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"tesodev/database"
 
@@ -16,7 +15,6 @@ func (col *Collect) Validate(c echo.Context) error {
 	if err := c.Bind(&data); err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	fmt.Println("handlers bind data", data.Id)
 	if database.Validate(bson.M{"_id": data.Id}, col.Col) {
 		return c.JSON(http.StatusOK, true)
 	}

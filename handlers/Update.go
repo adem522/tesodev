@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"tesodev/database"
 
@@ -11,7 +10,6 @@ import (
 func (col *Collect) Update(c echo.Context) error {
 	data := col.define()
 	if err := c.Bind(&data); err != nil {
-		fmt.Println("bind error", err)
 		return c.JSON(http.StatusBadRequest, false)
 	}
 	if database.Update(data.(map[string]interface{}), col.Col, col.Name) {

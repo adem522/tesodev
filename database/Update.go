@@ -18,8 +18,6 @@ func Update(data map[string]interface{}, col *mongo.Collection, name string) boo
 		bson.M{"_id": data["_id"]},
 		bson.D{{Key: "$set", Value: data}},
 	)
-	fmt.Println("update error", err)
-	fmt.Println("data", data)
 	return err == nil && result.ModifiedCount != 0
 }
 
