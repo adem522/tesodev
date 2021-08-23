@@ -32,7 +32,6 @@ func (col *Collect) Create(c echo.Context) (err error) {
 	}
 	insertedId = result.InsertedID.(string)
 	return c.JSON(http.StatusOK, insertedId)
-
 }
 
 func (col *Collect) define() (data interface{}) {

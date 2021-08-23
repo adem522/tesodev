@@ -1,9 +1,9 @@
 package main
 
 import (
-	utils "tesodev/Utils"
 	"tesodev/database"
 	"tesodev/handlers"
+	"tesodev/utils"
 
 	"github.com/labstack/echo"
 )
