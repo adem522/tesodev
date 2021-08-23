@@ -8,5 +8,5 @@ import (
 )
 
 func Validate(filter bson.M, col *mongo.Collection) bool {
-	return col.FindOne(context.TODO(), filter) != nil
+	return col.FindOne(context.TODO(), filter).Err() == nil
 }
