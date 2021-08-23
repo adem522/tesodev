@@ -7,6 +7,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func Validate(id *string, col *mongo.Collection) bool {
-	return col.FindOne(context.TODO(), bson.M{"_id": id}) != nil
+func Validate(filter bson.M, col *mongo.Collection) bool {
+	return col.FindOne(context.TODO(), filter) != nil
 }

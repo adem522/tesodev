@@ -5,6 +5,7 @@ import (
 	"tesodev/database"
 
 	"github.com/labstack/echo"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func (col *Collect) Validate(c echo.Context) error {
@@ -14,7 +15,7 @@ func (col *Collect) Validate(c echo.Context) error {
 	if err := c.Bind(&data); err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	if database.Validate(&data.Id, col.Col) {
+	if database.Validate(bson.M{"_id": data.Id}, col.Col) {
 		return c.JSON(http.StatusOK, true)
 	}
 	return c.JSON(http.StatusBadRequest, false)
