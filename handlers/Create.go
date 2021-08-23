@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"tesodev/database"
-	"tesodev/models"
 
 	"net/http"
 
@@ -21,29 +20,15 @@ func CreateCollections(c echo.Context) error {
 
 func (col *Collect) Create(c echo.Context) (err error) {
 	insertedId := ""
-	data := col.define()
+	var data map[string]interface{}
 	err = c.Bind(&data)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	result, err := database.Create(data.(map[string]interface{}), col.Col, col.Name)
+	result, err := database.Create(data, col.Col, col.Name)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	insertedId = result.InsertedID.(string)
 	return c.JSON(http.StatusOK, insertedId)
-}
-
-func (col *Collect) define() (data interface{}) {
-	if col.Name == "Address" {
-		return models.Address{}
-	} else if col.Name == "Product" {
-		return models.Product{}
-	} else if col.Name == "Customer" {
-		return models.Customer{}
-	} else if col.Name == "Order" {
-		return models.Order{}
-	} else {
-		return nil
-	}
 }
