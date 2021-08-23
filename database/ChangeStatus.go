@@ -8,7 +8,7 @@ import (
 )
 
 func ChangeStatus(id, status *string, col *mongo.Collection) bool {
-	_, err := col.UpdateOne(context.TODO(),
+	result, err := col.UpdateOne(context.TODO(),
 		bson.M{"_id": id},
 		bson.D{
 			{Key: "$set", Value: bson.D{
@@ -16,5 +16,5 @@ func ChangeStatus(id, status *string, col *mongo.Collection) bool {
 			}},
 		},
 	)
-	return err == nil
+	return err == nil && result.ModifiedCount != 0
 }
