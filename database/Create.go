@@ -21,6 +21,7 @@ func Create(request map[string]interface{}, col *mongo.Collection, name string) 
 	}
 	result, err = col.InsertOne(context.TODO(), request)
 	if err != nil {
+		fmt.Println("insertone error", err)
 		return nil, fmt.Errorf("error from database/create %w", err)
 	}
 	return result, nil
@@ -77,6 +78,6 @@ func determine(request map[string]interface{}, name string) (bson.M, error) {
 
 func toInt(request map[string]interface{}, name string) {
 	if reflect.TypeOf(request[name]) == reflect.TypeOf(1.0) {
-		request[name] = int(request[name].(float64))
+		request[name] = int(request[name].(float64)) //request is a pointer
 	}
 }
