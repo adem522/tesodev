@@ -22,23 +22,26 @@ func Update(data map[string]interface{}, col *mongo.Collection, name string) boo
 }
 
 func updateDetermine(request map[string]interface{}, name string) (bson.M, error) {
-	if name != "" {
-		if name == "Address" {
+	switch name {
+	case "address":
+		{
 			toInt(request, "cityCode") //if came double its return to int
-		} else if name == "Customer" || name == "Order" {
+		}
+	case "product":
+	case "customer", "order":
+		{
 			request["updatedAt"] = time.Now().Add(3 * time.Hour)
-			if name == "Order" {
+			if name == "order" {
 				toInt(request, "quantity") //if came double its return to int
 			}
-			address := request["address"].(map[string]interface{}) //address is a interface
-			toInt(address, "cityCode")                             //if came double its return to int
-		} else if name == "Product" {
-			//product just need id
-		} else {
-			return nil, fmt.Errorf(" collection name not found") //if not nil and not at all these
+			if request["address"] != nil {
+				toInt(request["address"].(map[string]interface{}), "cityCode") //if came double its return to int
+			}
 		}
-	} else {
-		return nil, fmt.Errorf(" collection name must") //if name nil
+	default:
+		{
+			return nil, fmt.Errorf(" collection name not found") //if name not found
+		}
 	}
 	return request, nil
 }

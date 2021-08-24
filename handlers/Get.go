@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"tesodev/database"
 
@@ -15,15 +16,17 @@ func (col *Collect) Get(c echo.Context) error {
 	}{}
 	data := []bson.M{}
 	err := c.Bind(&temp)
+	name := c.Request().URL.Path[1:]
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	if col.Name == "Order" && temp.CustomerId != "" { //		 //all customer order with costumerId in Order Collection
-		data, err = database.Get(bson.M{"customerId": temp.CustomerId}, col.Col)
+	fmt.Println("request name", name)
+	if name == "order" && temp.CustomerId != "" { //		 //all customer order with costumerId in Order Collection
+		data, err = database.Get(bson.M{"customerId": temp.CustomerId}, col.Database.Collection(name))
 	} else if temp.Id != "" { //						 		// every data with _id in came collection
-		data, err = database.Get(bson.M{"_id": temp.Id}, col.Col)
+		data, err = database.Get(bson.M{"_id": temp.Id}, col.Database.Collection(name))
 	} else { //										 			//every data in came collection
-		data, err = database.Get(nil, col.Col)
+		data, err = database.Get(nil, col.Database.Collection(name))
 	}
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)

@@ -14,14 +14,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func Create(request map[string]interface{}, col *mongo.Collection, name string) (result *mongo.InsertOneResult, err error) {
-	request, err = determine(request, name)
+func Create(request map[string]interface{}, db *mongo.Database, name string) (result *mongo.InsertOneResult, err error) {
+	request, err = determine(request, db, name)
 	if err != nil {
 		return nil, fmt.Errorf("error from database/create %w", err)
 	}
-	result, err = col.InsertOne(context.TODO(), request)
+	result, err = db.Collection(name).InsertOne(context.TODO(), request)
 	if err != nil {
-		fmt.Println("insertone error", err)
 		return nil, fmt.Errorf("error from database/create %w", err)
 	}
 	return result, nil
@@ -36,10 +35,10 @@ func CreateCollections() (err error) {
 		request   string
 		validator *options.CreateCollectionOptions
 	}{
-		{request: "Address", validator: options.CreateCollection().SetValidator(models.AddressValidator)},
-		{request: "Product", validator: options.CreateCollection().SetValidator(models.ProductValidator)},
-		{request: "Customer", validator: options.CreateCollection().SetValidator(models.CustomerValidator)},
-		{request: "Order", validator: options.CreateCollection().SetValidator(models.OrderValidator)},
+		{request: "address", validator: options.CreateCollection().SetValidator(models.AddressValidator)},
+		{request: "product", validator: options.CreateCollection().SetValidator(models.ProductValidator)},
+		{request: "customer", validator: options.CreateCollection().SetValidator(models.CustomerValidator)},
+		{request: "order", validator: options.CreateCollection().SetValidator(models.OrderValidator)},
 	}
 
 	for _, table := range tables {
@@ -52,28 +51,47 @@ func CreateCollections() (err error) {
 	return nil
 }
 
-func determine(request map[string]interface{}, name string) (bson.M, error) {
-	if name != "" {
-		request["_id"] = uuid.NewV4().String() //every collection need id
-		if name == "Address" {
+func determine(request map[string]interface{}, db *mongo.Database, name string) (bson.M, error) {
+	var err error
+	request["_id"] = uuid.NewV4().String() //every collection need id
+	switch name {
+	case "address":
+		{
 			toInt(request, "cityCode") //if came double its return to int
-		} else if name == "Customer" || name == "Order" {
+		}
+	case "product":
+	case "customer", "order":
+		{
 			request["createdAt"] = time.Now().Add(3 * time.Hour)
 			request["updatedAt"] = time.Now().Add(3 * time.Hour)
-			if name == "Order" {
+			if name == "order" {
 				toInt(request, "quantity") //if came double its return to int
+				request["product"], err = returnData(db.Collection("product"), request["productId"].(string))
+				if err != nil {
+					return nil, fmt.Errorf(" not found product for productId %w", err)
+				}
+				delete(request, "productId") //delete productId in request
 			}
-			address := request["address"].(map[string]interface{}) //address is a interface
-			toInt(address, "cityCode")                             //if came double its return to int
-		} else if name == "Product" {
-			//product just need id
-		} else {
-			return nil, fmt.Errorf(" collection name not found") //if not nil and not at all these
+			request["address"], err = returnData(db.Collection("address"), request["addressId"].(string))
+			if err != nil {
+				return nil, fmt.Errorf(" not found address for addressId %w", err)
+			}
+			delete(request, "addressId")
 		}
-	} else {
-		return nil, fmt.Errorf(" collection name must") //if name nil
+	default:
+		{
+			return nil, fmt.Errorf(" collection name not found") //if name not found
+		}
 	}
 	return request, nil
+}
+
+func returnData(collection *mongo.Collection, id string) (temp map[string]interface{}, err error) {
+	err = collection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&temp)
+	if err != nil {
+		return nil, fmt.Errorf(" find error")
+	}
+	return temp, nil
 }
 
 func toInt(request map[string]interface{}, name string) {

@@ -15,7 +15,7 @@ func (col *Collect) ChangeStatus(c echo.Context) error {
 	if err := c.Bind(&data); err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	if database.ChangeStatus(&data.Id, &data.Status, col.Col) {
+	if database.ChangeStatus(&data.Id, &data.Status, col.Database.Collection("order")) {
 		return c.JSON(http.StatusOK, true)
 	}
 	return c.JSON(http.StatusBadRequest, false)

@@ -14,7 +14,8 @@ func (col *Collect) Delete(c echo.Context) error {
 	if err := c.Bind(&data); err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	if database.Delete(&data.Id, col.Col) {
+	collectionName := c.Request().URL.Path[1:]
+	if database.Delete(&data.Id, &collectionName, col.Database) {
 		return c.JSON(http.StatusOK, true)
 	}
 	return c.JSON(http.StatusBadRequest, false)

@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func Delete(id *string, col *mongo.Collection) bool {
-	result, err := col.DeleteOne(context.TODO(), bson.M{"_id": id})
+func Delete(id, collectionName *string, col *mongo.Database) bool {
+	result, err := col.Collection(*collectionName).DeleteOne(context.TODO(), bson.M{"_id": *id})
 	return err == nil && result.DeletedCount != 0
 }

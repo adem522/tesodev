@@ -2,24 +2,35 @@ package database
 
 import (
 	"tesodev/database"
-	"tesodev/handlers"
 	"testing"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func TestGet(t *testing.T) {
+func TestGetWithEmptyArg(t *testing.T) {
 	client := database.Connect()
 	defer database.Close(client)
-	address := handlers.Collect{
-		Col:  client.Database("tesodev").Collection("Address"),
-		Name: "Address",
-	}
-	data, err := database.Get(bson.M{"_id": ""}, address.Col)
+
+	data, err := database.Get(bson.M{}, client.Database("tesodev").Collection("order"))
 	if err != nil {
 		t.Errorf("expected nil, received err %v", err)
 	}
 	if data == nil {
 		t.Errorf("expected not nil, received nil %v", data)
 	}
+}
+func TestGetWithArg(t *testing.T) {
+	client := database.Connect()
+	defer database.Close(client)
+	order := exampleOrder()
+	data, err := database.Get(bson.M{"_id": order.InsertedID}, client.Database("tesodev").Collection("order"))
+	if err != nil {
+		t.Errorf("expected nil, received err %v", err)
+	}
+	if data == nil {
+		t.Errorf("expected not nil, received nil %v", data)
+	}
+	collectionName := "order"
+	inserted := order.InsertedID.(string)
+	database.Delete(&inserted, &collectionName, client.Database("tesodev"))
 }

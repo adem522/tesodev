@@ -12,7 +12,8 @@ func (col *Collect) Update(c echo.Context) error {
 	if err := c.Bind(&data); err != nil {
 		return c.JSON(http.StatusBadRequest, false)
 	}
-	if database.Update(data, col.Col, col.Name) {
+	name := c.Request().URL.Path[1:]
+	if database.Update(data, col.Database.Collection(name), name) {
 		return c.JSON(http.StatusOK, true)
 	}
 	return c.JSON(http.StatusBadRequest, false)
