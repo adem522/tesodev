@@ -11,7 +11,7 @@ import (
 func main() {
 	client := database.Connect() //database client connect opening and return client
 	defer database.Close(client) //database client connect closing
-	database := handlers.Collect{
+	database := handlers.Database{
 		Database: client.Database("tesodev"),
 	}
 

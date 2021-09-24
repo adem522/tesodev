@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (col *Collect) Get(c echo.Context) error {
+func (col *Database) Get(c echo.Context) error {
 	temp := struct {
 		Id         string `bson:"_id" json:"_id"`
 		CustomerId string `bson:"customerId" json:"customerId"`

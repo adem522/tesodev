@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func (col *Collect) Update(c echo.Context) error {
+func (col *Database) Update(c echo.Context) error {
 	var data map[string]interface{}
 	if err := c.Bind(&data); err != nil {
 		return c.JSON(http.StatusBadRequest, false)

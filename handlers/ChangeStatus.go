@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func (col *Collect) ChangeStatus(c echo.Context) error {
+func (col Database) ChangeStatus(c echo.Context) error {
 	data := struct {
 		Id     string `bson:"_id,omitempty" json:"_id"`
 		Status string `bson:"status,omitempty"`

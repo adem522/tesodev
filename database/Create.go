@@ -3,23 +3,22 @@ package database
 import (
 	"context"
 	"reflect"
-	"time"
 
 	"fmt"
-	"tesodev/models"
 
-	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func Create(request map[string]interface{}, db *mongo.Database, name string) (result *mongo.InsertOneResult, err error) {
-	request, err = determine(request, db, name)
+	data, err := determine(request, db, name)
 	if err != nil {
 		return nil, fmt.Errorf("error from database/create %w", err)
 	}
-	result, err = db.Collection(name).InsertOne(context.TODO(), request)
+	fmt.Println("request", request)
+	result, err = db.Collection(name).InsertOne(context.TODO(), data)
 	if err != nil {
 		return nil, fmt.Errorf("error from database/create %w", err)
 	}
@@ -35,10 +34,10 @@ func CreateCollections() (err error) {
 		request   string
 		validator *options.CreateCollectionOptions
 	}{
-		{request: "address", validator: options.CreateCollection().SetValidator(models.AddressValidator)},
-		{request: "product", validator: options.CreateCollection().SetValidator(models.ProductValidator)},
-		{request: "customer", validator: options.CreateCollection().SetValidator(models.CustomerValidator)},
-		{request: "order", validator: options.CreateCollection().SetValidator(models.OrderValidator)},
+		{request: "address"},
+		{request: "product"},
+		{request: "customer"},
+		{request: "order"},
 	}
 
 	for _, table := range tables {
@@ -53,49 +52,45 @@ func CreateCollections() (err error) {
 
 func determine(request map[string]interface{}, db *mongo.Database, name string) (bson.M, error) {
 	var err error
-	request["_id"] = uuid.NewV4().String() //every collection need id
+	fmt.Println("içerdeyim")
 	switch name {
-	case "address":
-		{
-			toInt(request, "cityCode") //if came double its return to int
-		}
-	case "product":
 	case "customer", "order":
 		{
-			request["createdAt"] = time.Now().Add(3 * time.Hour)
-			request["updatedAt"] = time.Now().Add(3 * time.Hour)
+			fmt.Println("name", name)
 			if name == "order" {
-				toInt(request, "quantity") //if came double its return to int
 				request["product"], err = returnData(db.Collection("product"), request["productId"].(string))
 				if err != nil {
 					return nil, fmt.Errorf(" not found product for productId %w", err)
 				}
 				delete(request, "productId") //delete productId in request
 			}
-			request["address"], err = returnData(db.Collection("address"), request["addressId"].(string))
+			request["address"], err = returnData(db.Collection("address"), request["AddressId"].(string))
 			if err != nil {
 				return nil, fmt.Errorf(" not found address for addressId %w", err)
 			}
 			delete(request, "addressId")
 		}
-	default:
-		{
-			return nil, fmt.Errorf(" collection name not found") //if name not found
-		}
 	}
+	fmt.Println("çıktım")
 	return request, nil
 }
 
-func returnData(collection *mongo.Collection, id string) (temp map[string]interface{}, err error) {
-	err = collection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&temp)
-	if err != nil {
-		return nil, fmt.Errorf(" find error")
+func toInt(request map[string]interface{}, name string) {
+	if reflect.TypeOf(request[name]).Key().Kind() == reflect.Float64 {
+		request[name] = int(request[name].(float64)) //request is a pointer
+	} else if reflect.TypeOf(request[name]).Key().Kind() == reflect.Float32 {
+		request[name] = int(request[name].(float32)) //request is a pointer
 	}
-	return temp, nil
 }
 
-func toInt(request map[string]interface{}, name string) {
-	if reflect.TypeOf(request[name]) == reflect.TypeOf(1.0) {
-		request[name] = int(request[name].(float64)) //request is a pointer
+func returnData(collection *mongo.Collection, id string) (temp map[string]interface{}, err error) {
+	data, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, fmt.Errorf(" find error %w", err)
 	}
+	err = collection.FindOne(context.TODO(), bson.M{"_id": data}).Decode(&temp)
+	if err != nil {
+		return nil, fmt.Errorf(" find error %w", err)
+	}
+	return temp, nil
 }

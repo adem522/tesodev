@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func (col *Collect) Delete(c echo.Context) error {
+func (col *Database) Delete(c echo.Context) error {
 	data := struct {
 		Id string `bson:"_id" json:"_id"`
 	}{}

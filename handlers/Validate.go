@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (col *Collect) Validate(c echo.Context) error {
+func (col Database) Validate(c echo.Context) error {
 	data := struct {
 		Id string `bson:"_id" json:"_id"`
 	}{}
